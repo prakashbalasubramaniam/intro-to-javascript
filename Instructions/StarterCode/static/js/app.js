@@ -2,7 +2,7 @@
 var tableData = data;
 
 // Get a reference to the table body
-var tbody = d3.select("#ufo-table");
+var ttable = d3.select("#ufo-table");
 
 // Select the "Filter Table" button
 var button = d3.select("#filter-btn");
@@ -18,9 +18,19 @@ var mycounter_j=0;
 //tableData.forEach((
     
     
-function reload_tbl(temp_table) {
+function init_tbl(temp_table) {
     for (mycounter_i = 0; mycounter_i < temp_table.length; mycounter_i++) { 
-        var row = tbody.append("tr");        
+        var row = ttable.append("tr");        
+        Object.entries(temp_table[mycounter_i]).forEach(([key, value]) => {
+            var cell = row.append("td");
+            cell.text(value);
+        });
+    };
+}
+
+function update_tbl(temp_table) {
+    for (mycounter_i = 0; mycounter_i < temp_table.length; mycounter_i++) { 
+        var row = ttable.append("tr");        
         Object.entries(temp_table[mycounter_i]).forEach(([key, value]) => {
             var cell = row.append("td");
             cell.text(value);
@@ -39,14 +49,23 @@ function datefilter_func(datetime_filter) {
 }
 
 function clr_tbl(temp_table) {
-    for (mycounter_i = 0; mycounter_i < temp_table.length; mycounter_i++) { 
-        var row = tbody.remove("td");        
+    var table = d3.select("body").append("table");
+    var tbody = table.append("tbody");
+    var rows = table.selectAll("tbody tr")
+    var cells = rows.selectAll('td');
+    cells.enter();
+    cells.append("td")
+    cells.text("");
+    cells.exit().remove();
+//    for (mycounter_i = 0; mycounter_i < temp_table.length; mycounter_i++) { 
+        
+//        tbody.remove("tr");       
 //        Object.entries(temp_table[mycounter_i]).forEach(([key, value]) => {
 //            var cell = row.append("td");
 //            cell.text("");
 //        });
-    };
-  }
+//    };
+}
 
 // DateTime filter handler
 button.on("click", function() {
@@ -67,9 +86,11 @@ button.on("click", function() {
     console.log(filter_result);
 
     // initialize html page with table
-    clr_tbl(tableData);
-    reload_tbl(filter_result);
+    clr_tbl(tableData);  
+    //reload_tbl([]);  
+//    update_tbl(filter_result);
 }); 
 
 // initialize html page with table
-reload_tbl(tableData);
+init_tbl(tableData);
+//reload_tbl([]);
