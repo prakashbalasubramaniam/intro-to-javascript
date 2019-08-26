@@ -29,6 +29,8 @@ function init_tbl(temp_table) {
 }
 
 function update_tbl(temp_table) {
+    var mytable = d3.select("#mybody");
+    mytable.html("");
     for (mycounter_i = 0; mycounter_i < temp_table.length; mycounter_i++) { 
         var row = ttable.append("tr");        
         Object.entries(temp_table[mycounter_i]).forEach(([key, value]) => {
@@ -49,16 +51,17 @@ function datefilter_func(datetime_filter) {
 }
 
 function clr_tbl(temp_table) {
-    var table = d3.select("body").append("table");
-    var tbody = table.append("tbody");
-    var rows = table.selectAll("tbody tr")
-    var cells = rows.selectAll('td');
-    cells.enter();
-    cells.append("td")
-    cells.text("");
-    cells.exit().remove();
-//    for (mycounter_i = 0; mycounter_i < temp_table.length; mycounter_i++) { 
-        
+//    var table = d3.select('#mybody').append('table');
+    var mytable = d3.select("#mybody");
+//    mytable.html("");
+    //var test = mytable.selectAll("tr");
+    mytable.html("");
+//    var tr = table.selectAll('tr')
+//    .data(temp_table).enter()
+//    .append('tr');
+//    for (mycounter_i = 0; mycounter_i < tableData.length; mycounter_i++) { 
+//        mytable.d3.selectAll("tr").remove;
+
 //        tbody.remove("tr");       
 //        Object.entries(temp_table[mycounter_i]).forEach(([key, value]) => {
 //            var cell = row.append("td");
@@ -86,11 +89,29 @@ button.on("click", function() {
     console.log(filter_result);
 
     // initialize html page with table
-    clr_tbl(tableData);  
+    //clr_tbl(filter_result);  
     //reload_tbl([]);  
-//    update_tbl(filter_result);
+    //update_tbl(filter_result);
+    var mytable = d3.select("body").selectAll("td").remove();
+    //mytable.selectAll("td").remove();
+    //var mytable = d3.select("tbody").append("ttable");
+    //mytable.html("");
+    // Get a reference to the table body
+    var ttable_local = d3.select("#ufo-table");
+    //ttable.html("");
+    for (mycounter_i = 0; mycounter_i < filter_result.length; mycounter_i++) { 
+        //mytable.html("");
+        var row = ttable_local.append("tr");                
+        Object.entries(filter_result[mycounter_i]).forEach(([key, value]) => {            
+            var cell = row.append("td");
+            cell.text(value);            
+        });
+    };
+    
 }); 
 
 // initialize html page with table
 init_tbl(tableData);
 //reload_tbl([]);
+//ttable.html("");
+//clr_tbl();
