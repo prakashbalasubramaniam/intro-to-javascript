@@ -8,7 +8,15 @@ var ttable = d3.select("#ufo-table");
 var button = d3.select("#filter-btn");
 
 // Declare global variable for textbox input
-var inputValue, inputCity;
+var inputValue;
+
+// Declare a global filter inputs array
+var inputValue_array = [];
+
+// Declare the filter input IDs
+var filterInputID = ["#datetime_input", "#city_input", "#state_input", "#country_input", "#shape_input"];
+
+
 
 // Declare global variable counter
 var mycounter_i=0;
@@ -40,15 +48,30 @@ function update_tbl(temp_table) {
     };
 }
 
-// Create a custom filtering function
+//["#datetime_input", "#city_input", "#state_input", "#country_input", "#shape_input"]
+// Create a datetime filtering function
 function datefilter_func(datetime_filter) {
-    //var filter_datetemp = inputValue; 
-    //need to put all the inputs into an array and look for which one is enabled, have 5 filters
-    if (datetime_filter.datetime === inputValue && datetime_filter.city === inputCity) {
-        return datetime_filter;
-    } else {
-        return 0;
-    }     
+      return datetime_filter.datetime === inputValue_array[0];    
+}
+
+// Create a city filtering function
+function cityfilter_func(city_filter) {
+    return city_filter.city === inputValue_array[1];    
+}
+
+// Create a state filtering function
+function statefilter_func(state_filter) {
+    return state_filter.state === inputValue_array[2];    
+}
+
+// Create a country filtering function
+function countryfilter_func(country_filter) {
+    return country_filter.country === inputValue_array[3];    
+}
+
+// Create a shape filtering function
+function shapefilter_func(shape_filter) {
+    return shape_filter.shape === inputValue_array[4];    
 }
 
 function clr_tbl(temp_table) {
@@ -73,24 +96,53 @@ function clr_tbl(temp_table) {
 
 // DateTime filter handler
 button.on("click", function() {
+    inputValue_array = [];
+
+    // temp filter result
+    var filter_result = tableData;
+
+    // Get user filter inputs
+    for (mycounter_j = 0; mycounter_j < filterInputID.length; mycounter_j++) { 
+        // Select the input element and get the raw HTML node
+        var inputElement = d3.select(filterInputID[mycounter_j]);
+    
+        // Get the value property of the input element
+        inputValue = inputElement.property("value");
+
+        // save filter inputs into an array
+        inputValue_array.push(inputValue);
+
+        // filter() uses the custom function as its argument
+        //["#datetime_input", "#city_input", "#state_input", "#country_input", "#shape_input"];
+        if (mycounter_j == 0 && inputValue != ""){
+            filter_result = filter_result.filter(datefilter_func);
+        } else if (mycounter_j == 1 && inputValue != ""){
+            filter_result = filter_result.filter(cityfilter_func);
+        } else if (mycounter_j == 2 && inputValue != ""){
+            filter_result = filter_result.filter(statefilter_func);
+        } else if (mycounter_j == 3 && inputValue != ""){
+            filter_result = filter_result.filter(countryfilter_func);
+        } else if (mycounter_j == 4 && inputValue != ""){
+            filter_result = filter_result.filter(shapefilter_func);
+        } else {
+            //filter_result = [];
+        }
+
+        
+
+    }
 
     // Select the input element and get the raw HTML node
-    var inputElement = d3.select("#datetime_input");
+    //var inputElement = d3.select("#city_input");
     
     // Get the value property of the input element
-    inputValue = inputElement.property("value");
-
-    // Select the input element and get the raw HTML node
-    var inputElement = d3.select("#city_input");
-    
-    // Get the value property of the input element
-    inputCity = inputElement.property("value");
+    //inputCity = inputElement.property("value");
     
     // Display to console
-    console.log(inputValue);
+    console.log(inputValue_array);
   
     // filter() uses the custom function as its argument
-    var filter_result = tableData.filter(datefilter_func);
+    //var filter_result = tableData.filter(datefilter_func);
   
     // Display filtered result to console
     console.log(filter_result);
@@ -104,11 +156,11 @@ button.on("click", function() {
     //var mytable = d3.select("tbody").append("ttable");
     //mytable.html("");
     // Get a reference to the table body
-    var ttable_local = d3.select("#ufo-table");
+    //var ttable_local = d3.select("#ufo-table");
     //ttable.html("");
     for (mycounter_i = 0; mycounter_i < filter_result.length; mycounter_i++) { 
         //mytable.html("");
-        var row = ttable_local.append("tr");                
+        var row = ttable.append("tr");                
         Object.entries(filter_result[mycounter_i]).forEach(([key, value]) => {            
             var cell = row.append("td");
             cell.text(value);            
