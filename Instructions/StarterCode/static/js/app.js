@@ -8,7 +8,7 @@ var ttable = d3.select("#ufo-table");
 var button = d3.select("#filter-btn");
 
 // Declare global variable for textbox input
-var inputValue;
+var inputValue, inputCity;
 
 // Declare global variable counter
 var mycounter_i=0;
@@ -43,7 +43,8 @@ function update_tbl(temp_table) {
 // Create a custom filtering function
 function datefilter_func(datetime_filter) {
     //var filter_datetemp = inputValue; 
-    if (datetime_filter.datetime === inputValue) {
+    //need to put all the inputs into an array and look for which one is enabled, have 5 filters
+    if (datetime_filter.datetime === inputValue && datetime_filter.city === inputCity) {
         return datetime_filter;
     } else {
         return 0;
@@ -74,10 +75,16 @@ function clr_tbl(temp_table) {
 button.on("click", function() {
 
     // Select the input element and get the raw HTML node
-    var inputElement = d3.select("#datetime");
+    var inputElement = d3.select("#datetime_input");
     
     // Get the value property of the input element
     inputValue = inputElement.property("value");
+
+    // Select the input element and get the raw HTML node
+    var inputElement = d3.select("#city_input");
+    
+    // Get the value property of the input element
+    inputCity = inputElement.property("value");
     
     // Display to console
     console.log(inputValue);
